@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TaskFlow.Models.Models
 {
-    internal class Comment
+    public class Comment
     {
         public int Id { get; set; }
 
