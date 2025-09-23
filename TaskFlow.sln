@@ -13,15 +13,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Data", "TaskFlow.Data\TaskFlow.Data.csproj", "{6736A363-8183-44B8-B62C-E067BFD883F5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2DAEBBF8-6A28-4429-9613-66ABB6E2E196} = {2DAEBBF8-6A28-4429-9613-66ABB6E2E196}
-		{7C182493-26EA-4E2E-9CFC-DE54BF381A44} = {7C182493-26EA-4E2E-9CFC-DE54BF381A44}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Models", "TaskFlow.Models\TaskFlow.Models.csproj", "{2DAEBBF8-6A28-4429-9613-66ABB6E2E196}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7C182493-26EA-4E2E-9CFC-DE54BF381A44} = {7C182493-26EA-4E2E-9CFC-DE54BF381A44}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Utility", "TaskFlow.Utility\TaskFlow.Utility.csproj", "{7C182493-26EA-4E2E-9CFC-DE54BF381A44}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2DAEBBF8-6A28-4429-9613-66ABB6E2E196} = {2DAEBBF8-6A28-4429-9613-66ABB6E2E196}
+		{6736A363-8183-44B8-B62C-E067BFD883F5} = {6736A363-8183-44B8-B62C-E067BFD883F5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
