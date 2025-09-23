@@ -1,0 +1,29 @@
+﻿@model IEnumerable<TaskFlow.Models.Models.Comment>
+
+<h2>Comments</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add Comment</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Content</th>
+            <th>Created At</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Content</td>
+                <td>@item.CreatedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

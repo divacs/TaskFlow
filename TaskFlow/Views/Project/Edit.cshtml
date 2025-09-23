@@ -1,0 +1,24 @@
+﻿@model TaskFlow.Models.Models.Project
+
+<h2>Edit Project</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="ProjectCode"></label>
+        <input asp-for="ProjectCode" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Deadline"></label>
+        <input asp-for="Deadline" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EstimatedTime"></label>
+        <input asp-for="EstimatedTime" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

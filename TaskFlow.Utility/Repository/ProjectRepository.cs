@@ -26,7 +26,7 @@ namespace TaskFlow.Utility.Repository
         {
             return await _context.Projects
                 .Include(p => p.Tasks)
-                .Include(p => p.Comments)
+                .Include(p => p.Comments)   // this include comments related to the project
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 

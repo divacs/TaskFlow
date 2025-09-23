@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskFlow.Data\TaskFlow.Data.csproj" />
+    <ProjectReference Include="..\TaskFlow.Utility\TaskFlow.Utility.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<TaskFlow.Models.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<h2 class="mb-4">Projects</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary mb-3">Add Project</a>
+</p>
+
+<div class="row">
+    @foreach (var project in Model)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@project.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@project.ProjectCode</h6>
+                    <p class="card-text"><strong>Deadline:</strong> @project.Deadline.ToShortDateString()</p>
+                    <p class="card-text"><strong>Estimated Time:</strong> @project.EstimatedTime hrs</p>
+                    <div class="mb-2">
+                        <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-warning me-2">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
+
+                    <hr />
+                    <h6>Comments:</h6>
+                    <ul class="list-group list-group-flush mb-2">
+                        @foreach (var comment in project.Comments)
+                        {
+                            <li class="list-group-item py-1">@comment.Content <small class="text-muted">(@comment.CreatedAt:g)</small></li>
+                        }
+                    </ul>
+
+                    <form asp-controller="Comment" asp-action="Create" method="post">
+                        <input type="hidden" name="ProjectId" value="@project.Id" />
+                        <div class="mb-2">
+                            <textarea name="Content" class="form-control form-control-sm" placeholder="Add comment..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success">Add Comment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -3,7 +3,7 @@ using TaskFlow.Models.Models;
 using TaskFlow.Utility.Interface;
 using TaskFlow.Data;
 
-namespace TaskFlow.Utility.Repositories
+namespace TaskFlow.Utility.Repository
 {
     public class CommentRepository : ICommentRepository
     {

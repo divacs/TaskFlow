@@ -4,7 +4,7 @@ using TaskFlow.Utility.Interface;
 using TaskFlow.Data;
 using TaskStatus = TaskFlow.Models.Models.TaskStatus;
 
-namespace TaskFlow.Utility.Repositories
+namespace TaskFlow.Utility.Repository
 {
     public class TaskItemRepository : ITaskItemRepository
     {
@@ -27,7 +27,7 @@ namespace TaskFlow.Utility.Repositories
         {
             return await _context.TaskItems
                 .Include(t => t.Project)
-                .Include(t => t.Comments)
+                .Include(t => t.Comments)  // this include comments related to the task item
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
