@@ -1,16 +1,17 @@
-using Microsoft.EntityFrameworkCore;  
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TaskFlow.Data;
+using TaskFlow.Models.Models;
 using TaskFlow.Utility.Interface;
 using TaskFlow.Utility.Repository;
-using TaskFlow.Models.Models;
-using Microsoft.AspNetCore.Identity;
+using TaskFlow.Utility.Seeders; 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Ensure the DbContext is registered correctly
+// DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -24,20 +25,33 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-
 var app = builder.Build();
+
+// Seed roles and admin user
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    await RoleSeeder.SeedRoles(roleManager);
+    await UserSeeder.SeedAdmin(userManager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+// Authentication must come before Authorization
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
