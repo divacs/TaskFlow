@@ -4,11 +4,11 @@ using TaskFlow.Data;
 using TaskFlow.Models.Models;
 using TaskFlow.Utility.Interface;
 using TaskFlow.Utility.Repository;
-using TaskFlow.Utility.Seeders; 
+using TaskFlow.Utility.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllersWithViews();
 
 // DbContext
@@ -21,9 +21,24 @@ builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 // Identity configuration
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = false;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+// Cookie configuration
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
 
 var app = builder.Build();
 
@@ -37,11 +52,15 @@ using (var scope = app.Services.CreateScope())
     await UserSeeder.SeedAdmin(userManager);
 }
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+}
+else
+{
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -49,7 +68,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Authentication must come before Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

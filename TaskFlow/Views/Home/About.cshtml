@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<TaskFlow.Models.Models.ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "About TaskFlow";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4 text-center" style="max-width: 700px; width: 100%;">
+        <h2 class="mb-3">About <strong>TaskFlow</strong></h2>
+        <p class="lead">
+            TaskFlow is a web application for simple project and task management.
+            It allows users to:
+        </p>
+
+        <ul class="text-start mx-auto mb-3" style="max-width: 500px;">
+            <li>Create and track projects and tasks</li>
+            <li>Add comments and update task status</li>
+            <li>Manage user roles and access</li>
+            <li>Log in and log out securely using Identity</li>
+        </ul>
+
+        <p>
+            The goal of TaskFlow is to help teams organize, monitor progress, and collaborate efficiently on projects.
+        </p>
+
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            <a class="btn btn-primary mt-3" asp-controller="Home" asp-action="Index">Back to Login</a>
+        }
+    </div>
+</div>

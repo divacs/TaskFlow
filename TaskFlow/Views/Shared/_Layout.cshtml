@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<TaskFlow.Models.Models.ApplicationUser> SignInManager
+@inject UserManager<TaskFlow.Models.Models.ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,7 +10,7 @@
     <title>@ViewData["Title"] - TaskFlow</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Site CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -16,24 +20,44 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TaskFlow</a>
+                <!-- Brand -->
+                <a class="navbar-brand" asp-controller="Home" asp-action="About">TaskFlow</a>
+
+                <!-- Toggler for mobile -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                <!-- Navbar links -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Project" asp-action="Index">Projects</a>
+                            <a class="nav-link text-light" asp-controller="Project" asp-action="Index">Projects</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="TaskItem" asp-action="Index">Tasks</a>
+                            <a class="nav-link text-light" asp-controller="TaskItem" asp-action="Index">Tasks</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Comment" asp-action="Index">Comments</a>
+                            <a class="nav-link text-light" asp-controller="Comment" asp-action="Index">Comments</a>
                         </li>
                     </ul>
+
+                    <!-- Right side: Username + Logout / Login -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item d-flex align-items-center">
+                                <span class="text-light me-2">Hello, @User.Identity.Name!</span>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link text-light p-0">Logout</button>
+                                </form>
+                            </li>
+                        }
+                       
+                    </ul>
+
+
                 </div>
             </div>
         </nav>
@@ -51,11 +75,12 @@
         </div>
     </footer>
 
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap JS Bundle (with Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
-
+    <!-- Site JS -->
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
