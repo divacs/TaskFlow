@@ -16,12 +16,12 @@ namespace TaskFlow.Controllers
             _userManager = userManager;
         }
 
-        // GET: /Account/Login
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View(); // Shows the login form
-        }
+        //// GET: /Account/Login
+        //[HttpGet]
+        //public IActionResult LoginConfirmation()
+        //{
+        //    return View(); // Shows the login form
+        //}
 
         // POST: /Account/Login
         [HttpPost]
@@ -46,12 +46,12 @@ namespace TaskFlow.Controllers
             }
 
             // If login is successful, redirect to the welcome page
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("LoginConfirmation", "Account");
         }
 
         // GET: /Account/LoginWelcome
         [HttpGet]
-        public IActionResult LoginWelcome()
+        public IActionResult LoginConfirmation()
         {
             return View(); // This will load Views/Account/Login.cshtml
         }
@@ -62,7 +62,7 @@ namespace TaskFlow.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Home");
         }
     }
 }
