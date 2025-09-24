@@ -64,5 +64,47 @@ namespace TaskFlow.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Home");
         }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(NewUser model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FullName = model.FullName
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                // Assign default role "User"
+                await _userManager.AddToRoleAsync(user, "User");
+
+                // Auto login after registration
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
+                // Redirect to confirmation page
+                return RedirectToAction("LoginConfirmation", "Account");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View(model);
+        }
     }
 }
