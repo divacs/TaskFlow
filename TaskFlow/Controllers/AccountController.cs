@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TaskFlow.Models.Models;
 using TaskFlow.Models.Models.Account;
 
@@ -87,24 +88,32 @@ namespace TaskFlow.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                // Assign default role "User"
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(model);
+            }
+
+            try
+            {
+                // if this line fails, the user creation is rolled back in the catch block
                 await _userManager.AddToRoleAsync(user, "User");
 
-                // Auto login after registration
+                // or this line fails, the user creation is rolled back in the catch block
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                // Redirect to confirmation page
                 return RedirectToAction("LoginConfirmation", "Account");
             }
-
-            foreach (var error in result.Errors)
+            catch
             {
-                ModelState.AddModelError("", error.Description);
+                // user creation succeeded but role assignment or sign-in failed
+                await _userManager.DeleteAsync(user);
+                ModelState.AddModelError("", "Registration failed due to an internal error.");
+                return View(model);
             }
-
-            return View(model);
         }
     }
 }
