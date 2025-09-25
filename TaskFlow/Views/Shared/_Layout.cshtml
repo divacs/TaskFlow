@@ -41,6 +41,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-controller="Comment" asp-action="Index">Comments</a>
                         </li>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Users" asp-action="Index">List of all users</a>
+                            </li>
+                        }
                     </ul>
 
                     <!-- Right side: Username + Logout / Login -->
