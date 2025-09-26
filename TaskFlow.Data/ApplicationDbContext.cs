@@ -17,6 +17,7 @@ namespace TaskFlow.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Seed Projects (for now ProjectManagerId is null, will be updated when users are added)
             modelBuilder.Entity<Project>().HasData(
                 new Project
                 {
@@ -24,7 +25,8 @@ namespace TaskFlow.Data
                     ProjectCode = "PRJ001",
                     Name = "Website Redesign",
                     Deadline = new DateTime(2025, 12, 31),
-                    EstimatedTime = 200
+                    EstimatedTime = 200,
+                    ProjectManagerId = "PM001" // adding null for now
                 },
                 new Project
                 {
@@ -32,7 +34,8 @@ namespace TaskFlow.Data
                     ProjectCode = "PRJ002",
                     Name = "Mobile App Development",
                     Deadline = new DateTime(2025, 11, 15),
-                    EstimatedTime = 350
+                    EstimatedTime = 350,
+                    ProjectManagerId = "PM002"
                 },
                 new Project
                 {
@@ -40,10 +43,12 @@ namespace TaskFlow.Data
                     ProjectCode = "PRJ003",
                     Name = "Internal CRM System",
                     Deadline = new DateTime(2026, 01, 30),
-                    EstimatedTime = 500
+                    EstimatedTime = 500,
+                    ProjectManagerId = "PM003"
                 }
             );
 
+            // Seed Tasks (AssignedUserId = null because users will be added later)
             modelBuilder.Entity<TaskItem>().HasData(
                 new TaskItem
                 {
@@ -54,7 +59,8 @@ namespace TaskFlow.Data
                     EstimatedTime = 40,
                     Status = TaskStatus.InProgress,
                     Progress = 50,
-                    ProjectId = 1
+                    ProjectId = 1,
+                    AssignedUserId = null
                 },
                 new TaskItem
                 {
@@ -65,7 +71,8 @@ namespace TaskFlow.Data
                     EstimatedTime = 60,
                     Status = TaskStatus.New,
                     Progress = 0,
-                    ProjectId = 2
+                    ProjectId = 2,
+                    AssignedUserId = null
                 },
                 new TaskItem
                 {
@@ -76,10 +83,12 @@ namespace TaskFlow.Data
                     EstimatedTime = 30,
                     Status = TaskStatus.Finished,
                     Progress = 100,
-                    ProjectId = 3
+                    ProjectId = 3,
+                    AssignedUserId = null
                 }
             );
 
+            // Seed Comments
             modelBuilder.Entity<Comment>().HasData(
                 new Comment
                 {
@@ -106,4 +115,3 @@ namespace TaskFlow.Data
         }
     }
 }
-

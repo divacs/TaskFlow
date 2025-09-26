@@ -49,7 +49,7 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     await RoleSeeder.SeedRoles(roleManager);
-    await UserSeeder.SeedAdmin(userManager);
+    await UserSeeder.SeedUsers(userManager);
 }
 
 // Configure the HTTP request pipeline

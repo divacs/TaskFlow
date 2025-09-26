@@ -18,22 +18,26 @@ namespace TaskFlow.Models.Models
 
         [Required, MaxLength(150)]
         public string Title { get; set; } = null!;
-
         public string? Description { get; set; }
-
         public DateTime Deadline { get; set; }
         public int EstimatedTime { get; set; }
-
         public TaskStatus Status { get; set; } = TaskStatus.New;
         public int Progress { get; set; } = 0;
 
-        // foreign key and navigation property
+        // Project relation
         [ForeignKey(nameof(Project))]
         public int ProjectId { get; set; }
 
         [ValidateNever]
         public Project Project { get; set; } = null!;
 
+        // Assigned User (optional)
+        [ForeignKey(nameof(AssignedUser))]
+        public string? AssignedUserId { get; set; }
+        [ValidateNever]
+        public ApplicationUser? AssignedUser { get; set; }
+
+        // Comments
         [ValidateNever]
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }

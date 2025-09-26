@@ -100,7 +100,7 @@ namespace TaskFlow.Controllers
             try
             {
                 // if this line fails, the user creation is rolled back in the catch block
-                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, "Developer");
 
                 // or this line fails, the user creation is rolled back in the catch block
                 await _signInManager.SignInAsync(user, isPersistent: false);

@@ -12,6 +12,10 @@ namespace TaskFlow.Models.Models
     {
         [Required]
         [MaxLength(100)]
-        public string FullName { get; set; } = null!;
+        public string FullName { get; set; } 
+
+        // Navigation properties
+        public ICollection<Project>? ManagedProjects { get; set; } = new List<Project>();
+        public ICollection<TaskItem>? AssignedTasks { get; set; } = new List<TaskItem>();
     }
 }

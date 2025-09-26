@@ -7,7 +7,7 @@ namespace TaskFlow.Utility.Seeders
         // this method seeds roles into the database if they do not already exist
         public static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            string[] roles = { "Administrator", "ProjectManager", "User" };
+            string[] roles = { "Administrator", "ProjectManager", "Developer" };
 
             foreach (var roleName in roles)
             {
