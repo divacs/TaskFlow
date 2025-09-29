@@ -1,0 +1,21 @@
+﻿@model TaskFlow.Models.Models.TaskItem
+
+@{
+    ViewData["Title"] = "Task Deleted";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-5 text-center" style="min-width: 400px;">
+        <div class="alert alert-success">
+            ✅ The task "@Model.Title" has been successfully deleted.
+        </div>
+        <p>You will be redirected back to the task list shortly...</p>
+        <a asp-action="Index" class="btn btn-primary mt-3">Go Back Now</a>
+    </div>
+</div>
+
+<script>
+    setTimeout(function () {
+        window.location.href = '@Url.Action("Index", "TaskItem")';
+    }, 3000);
+</script>

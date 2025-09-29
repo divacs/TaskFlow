@@ -117,5 +117,11 @@ namespace TaskFlow.Utility.Repository
             await _context.SaveChangesAsync();
             return true;
         }
+        // Retrieve all projects for task assignment context
+        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
+        {
+            return await _context.Projects.ToListAsync();
+        }
+
     }
 }

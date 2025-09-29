@@ -1,8 +1,17 @@
-﻿@model IEnumerable<TaskFlow.Models.Models.TaskItem>
+﻿```csharp
+@model IEnumerable<TaskFlow.Models.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "Tasks";
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    bool isAdmin = User.IsInRole("Administrator");
+    bool isPM = User.IsInRole("ProjectManager");
+    bool isDeveloper = User.IsInRole("Developer");
+}
 
 <h2 class="mb-4">Tasks</h2>
 
-@if (User.IsInRole("Administrator") || User.IsInRole("ProjectManager"))
+@if (isAdmin || isPM)
 {
     <p>
         <a asp-action="Create" class="btn btn-primary mb-3">Add Task</a>
@@ -22,20 +31,34 @@
                     <p class="card-text"><strong>Deadline:</strong> @task.Deadline.ToShortDateString()</p>
                     <p class="card-text"><strong>Assigned To:</strong> @task.AssignedUser?.FullName ?? "Unassigned"</p>
 
-                    @if (User.IsInRole("Administrator") || User.IsInRole("ProjectManager") || (User.IsInRole("Developer") && task.AssignedUserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
-                    {
-                        <div class="mb-2">
+                    @* --- ROLE-BASED BUTTONS --- *@
+                    <div class="mb-2">
+                        @* Admin i ProjectManager mogu uvek editovati *@
+                        @if (isAdmin || isPM)
+                        {
                             <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning me-2">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger">Delete</a>
-                        </div>
-                    }
+
+                            <form asp-action="DeleteConfirmed" asp-route-id="@task.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        }
+                        else if (isDeveloper && task.AssignedUserId == currentUserId)
+                        {
+                            @* Developer može editovati samo svoje taskove *@
+                            <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning me-2">Edit</a>
+                        }
+                    </div>
 
                     <hr />
                     <h6>Comments:</h6>
                     <ul class="list-group list-group-flush mb-2">
                         @foreach (var comment in task.Comments)
                         {
-                            <li class="list-group-item py-1">@comment.Content <small class="text-muted">(@comment.CreatedAt:g)</small></li>
+                            <li class="list-group-item py-1">
+                                @comment.Content 
+                                <small class="text-muted">(@comment.CreatedAt:g)</small>
+                            </li>
                         }
                     </ul>
 
@@ -51,3 +74,4 @@
         </div>
     }
 </div>
+```

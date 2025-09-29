@@ -17,5 +17,7 @@ namespace TaskFlow.Utility.Interface
         // Assign/Unassign logic
         Task<bool> AssignTaskAsync(int taskId, string userId, string role);
         Task<bool> UnassignTaskAsync(int taskId);
+
+        Task<IEnumerable<Project>> GetAllProjectsAsync();
     }
 }

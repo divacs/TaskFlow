@@ -2,37 +2,52 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    var isDeveloper = User.IsInRole("Developer");
-    var developers = ViewBag.Developers as List<TaskFlow.Models.Models.ApplicationUser> ?? new List<TaskFlow.Models.Models.ApplicationUser>();
+    ViewData["Title"] = "Create Task";
+    var developerSelectList = ViewBag.Developers as List<SelectListItem> ?? new List<SelectListItem>();
+    var projectSelectList = ViewBag.Projects as List<SelectListItem> ?? new List<SelectListItem>();
 }
 
 <h2>Create Task</h2>
 
 <form asp-action="Create" method="post">
+    <!-- Project -->
+    <div class="form-group mb-2">
+        <label asp-for="ProjectId">Project</label>
+        <select asp-for="ProjectId" class="form-control" asp-items="projectSelectList">
+            <option value="">-- Select Project --</option>
+        </select>
+        <span asp-validation-for="ProjectId" class="text-danger"></span>
+    </div>
+
+    <!-- Title -->
     <div class="form-group mb-2">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
+    <!-- Description -->
     <div class="form-group mb-2">
         <label asp-for="Description"></label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
+    <!-- Deadline -->
     <div class="form-group mb-2">
         <label asp-for="Deadline"></label>
         <input asp-for="Deadline" type="date" class="form-control" />
         <span asp-validation-for="Deadline" class="text-danger"></span>
     </div>
 
+    <!-- Estimated Time -->
     <div class="form-group mb-2">
         <label asp-for="EstimatedTime"></label>
         <input asp-for="EstimatedTime" class="form-control" />
         <span asp-validation-for="EstimatedTime" class="text-danger"></span>
     </div>
 
+    <!-- Status -->
     <div class="form-group mb-2">
         <label asp-for="Status"></label>
         <select asp-for="Status" class="form-control">
@@ -44,23 +59,21 @@
         <span asp-validation-for="Status" class="text-danger"></span>
     </div>
 
+    <!-- Progress -->
     <div class="form-group mb-2">
         <label asp-for="Progress"></label>
         <input asp-for="Progress" type="number" min="0" max="100" class="form-control" />
         <span asp-validation-for="Progress" class="text-danger"></span>
     </div>
 
-    @if (!isDeveloper)
-    {
-        <div class="form-group mb-2">
-            <label asp-for="AssignedUserId">Assign to Developer</label>
-            <select asp-for="AssignedUserId" class="form-control"
-                    asp-items="@(new SelectList(developers, "Id", "FullName", Model.AssignedUserId))">
-                <option value="">-- Select Developer --</option>
-            </select>
-            <span asp-validation-for="AssignedUserId" class="text-danger"></span>
-        </div>
-    }
+    <!-- Assigned User -->
+    <div class="form-group mb-2">
+        <label asp-for="AssignedUserId">Assign to Developer</label>
+        <select asp-for="AssignedUserId" class="form-control" asp-items="developerSelectList">
+            <option value="">-- Select Developer --</option>
+        </select>
+        <span asp-validation-for="AssignedUserId" class="text-danger"></span>
+    </div>
 
     <button type="submit" class="btn btn-success">Create</button>
 </form>
