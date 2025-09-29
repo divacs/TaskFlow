@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Models.Models;
 using TaskStatus = TaskFlow.Models.Models.TaskStatus;
@@ -17,7 +18,44 @@ namespace TaskFlow.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Seed Projects (for now ProjectManagerId is null, will be updated when users are added)
+            // Seed Users (Project Managers)
+            modelBuilder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "PM001",
+                    UserName = "pm1",
+                    NormalizedUserName = "PM1",
+                    Email = "pm1@taskflow.com",
+                    NormalizedEmail = "PM1@TASKFLOW.COM",
+                    EmailConfirmed = true,
+                    FullName = "Alice ProjectManager",
+                    PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null, "Pm123!")
+                },
+                new ApplicationUser
+                {
+                    Id = "PM002",
+                    UserName = "pm2",
+                    NormalizedUserName = "PM2",
+                    Email = "pm2@taskflow.com",
+                    NormalizedEmail = "PM2@TASKFLOW.COM",
+                    EmailConfirmed = true,
+                    FullName = "Bob ProjectManager",
+                    PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null, "Pm123!")
+                },
+                new ApplicationUser
+                {
+                    Id = "PM003",
+                    UserName = "pm3",
+                    NormalizedUserName = "PM3",
+                    Email = "pm3@taskflow.com",
+                    NormalizedEmail = "PM3@TASKFLOW.COM",
+                    EmailConfirmed = true,
+                    FullName = "Charlie ProjectManager",
+                    PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null, "Pm123!")
+                }
+            );
+
+            // Seed Projects
             modelBuilder.Entity<Project>().HasData(
                 new Project
                 {
@@ -26,7 +64,7 @@ namespace TaskFlow.Data
                     Name = "Website Redesign",
                     Deadline = new DateTime(2025, 12, 31),
                     EstimatedTime = 200,
-                    ProjectManagerId = "PM001" // adding null for now
+                    ProjectManagerId = "PM001"
                 },
                 new Project
                 {
@@ -48,7 +86,7 @@ namespace TaskFlow.Data
                 }
             );
 
-            // Seed Tasks (AssignedUserId = null because users will be added later)
+            // Seed TaskItems
             modelBuilder.Entity<TaskItem>().HasData(
                 new TaskItem
                 {

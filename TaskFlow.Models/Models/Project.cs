@@ -20,10 +20,10 @@ namespace TaskFlow.Models.Models
         // Project Manager (required)
         [Required]
         [ForeignKey(nameof(ProjectManager))]
-        public string ProjectManagerId { get; set; } 
+        public string ProjectManagerId { get; set; }
 
         [ValidateNever]
-        public ApplicationUser ProjectManager { get; set; } 
+        public ApplicationUser ProjectManager { get; set; }
 
         // Relationships
         [ValidateNever]
@@ -31,5 +31,9 @@ namespace TaskFlow.Models.Models
 
         [ValidateNever]
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+        // Izračunati progress (ne čuva se u bazi)
+        [NotMapped]
+        public int Progress { get; set; }
     }
 }

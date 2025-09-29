@@ -2,13 +2,17 @@
 
 @{
     ViewData["Title"] = "Projects";
+    var currentUserId = ViewBag.CurrentUserId as string;
 }
 
 <h2 class="mb-4">Projects</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary mb-3">Add Project</a>
-</p>
+@if (User.IsInRole("Administrator") || User.IsInRole("ProjectManager"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary mb-3">Add Project</a>
+    </p>
+}
 
 <div class="row">
     @foreach (var project in Model)
@@ -18,12 +22,20 @@
                 <div class="card-body">
                     <h5 class="card-title">@project.Name</h5>
                     <h6 class="card-subtitle mb-2 text-muted">@project.ProjectCode</h6>
+                    <p class="card-text"><strong>Project Manager:</strong> @project.ProjectManager?.FullName</p>
                     <p class="card-text"><strong>Deadline:</strong> @project.Deadline.ToShortDateString()</p>
                     <p class="card-text"><strong>Estimated Time:</strong> @project.EstimatedTime hrs</p>
-                    <div class="mb-2">
-                        <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-warning me-2">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-sm btn-danger">Delete</a>
-                    </div>
+                    <p class="card-text"><strong>Progress:</strong> @(project.Tasks.Any() ? project.Tasks.Average(t => t.Progress) : 0) %</p>
+
+                    @* Edit/Delete buttons logic *@
+                    @if (User.IsInRole("Administrator") ||
+                                    (User.IsInRole("ProjectManager") && project.ProjectManagerId == currentUserId))
+                    {
+                        <div class="mb-2">
+                            <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-warning me-2">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    }
 
                     <hr />
                     <h6>Comments:</h6>

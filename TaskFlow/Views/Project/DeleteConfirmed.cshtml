@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Project Deleted";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-5 text-center" style="min-width: 400px;">
+        <div class="alert alert-success">
+            ✅ The project has been successfully deleted.
+        </div>
+        <p>You will be redirected back to the project list shortly...</p>
+        <a asp-action="Index" class="btn btn-primary mt-3">Go Back Now</a>
+    </div>
+</div>
+
+<script>
+    setTimeout(function () {
+        window.location.href = '@Url.Action("Index", "Project")';
+    }, 3000);
+</script>

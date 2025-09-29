@@ -19,6 +19,7 @@ namespace TaskFlow.Utility.Repository
         {
             return await _context.TaskItems
                 .Include(t => t.Project)
+                .Include(t => t.AssignedUser)
                 .Include(t => t.Comments)
                 .ToListAsync();
         }
@@ -27,7 +28,8 @@ namespace TaskFlow.Utility.Repository
         {
             return await _context.TaskItems
                 .Include(t => t.Project)
-                .Include(t => t.Comments)  // this include comments related to the task item
+                .Include(t => t.AssignedUser)
+                .Include(t => t.Comments)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -35,6 +37,7 @@ namespace TaskFlow.Utility.Repository
         {
             return await _context.TaskItems
                 .Where(t => t.ProjectId == projectId)
+                .Include(t => t.AssignedUser)
                 .Include(t => t.Comments)
                 .ToListAsync();
         }
@@ -64,9 +67,7 @@ namespace TaskFlow.Utility.Repository
         public async Task UpdateStatusAsync(int id, string status)
         {
             if (!Enum.TryParse<TaskStatus>(status, out var parsedStatus))
-            {
                 throw new ArgumentException($"Invalid status value: {status}");
-            }
 
             var taskItem = await _context.TaskItems.FindAsync(id);
             if (taskItem != null)
@@ -84,6 +85,37 @@ namespace TaskFlow.Utility.Repository
                 taskItem.Progress = progress;
                 await _context.SaveChangesAsync();
             }
+        }
+
+        // Assign task to user with role-based constraints
+        public async Task<bool> AssignTaskAsync(int taskId, string userId, string role)
+        {
+            var taskItem = await _context.TaskItems.FindAsync(taskId);
+            if (taskItem == null) return false;
+
+            if (role == "Developer")
+            {
+                int activeTasks = await _context.TaskItems
+                    .CountAsync(t => t.AssignedUserId == userId && t.Status != TaskStatus.Finished);
+
+                if (activeTasks >= 3)
+                    throw new InvalidOperationException("Developer cannot have more than 3 active tasks.");
+            }
+
+            taskItem.AssignedUserId = userId;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        // Unassign task from user
+        public async Task<bool> UnassignTaskAsync(int taskId)
+        {
+            var taskItem = await _context.TaskItems.FindAsync(taskId);
+            if (taskItem == null) return false;
+
+            taskItem.AssignedUserId = null;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

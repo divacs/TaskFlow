@@ -1,14 +1,13 @@
 ﻿@model IEnumerable<TaskFlow.Models.Models.TaskItem>
 
-@{
-    ViewData["Title"] = "Tasks";
-}
-
 <h2 class="mb-4">Tasks</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary mb-3">Add Task</a>
-</p>
+@if (User.IsInRole("Administrator") || User.IsInRole("ProjectManager"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary mb-3">Add Task</a>
+    </p>
+}
 
 <div class="row">
     @foreach (var task in Model)
@@ -21,10 +20,15 @@
                     <p class="card-text"><strong>Status:</strong> @task.Status</p>
                     <p class="card-text"><strong>Progress:</strong> @task.Progress %</p>
                     <p class="card-text"><strong>Deadline:</strong> @task.Deadline.ToShortDateString()</p>
-                    <div class="mb-2">
-                        <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning me-2">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger">Delete</a>
-                    </div>
+                    <p class="card-text"><strong>Assigned To:</strong> @task.AssignedUser?.FullName ?? "Unassigned"</p>
+
+                    @if (User.IsInRole("Administrator") || User.IsInRole("ProjectManager") || (User.IsInRole("Developer") && task.AssignedUserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
+                    {
+                        <div class="mb-2">
+                            <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning me-2">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    }
 
                     <hr />
                     <h6>Comments:</h6>

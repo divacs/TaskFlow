@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskFlow.Data;
 
@@ -11,9 +12,11 @@ using TaskFlow.Data;
 namespace TaskFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250926192237_ProjectModelAddField")]
+    partial class ProjectModelAddField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,59 +226,6 @@ namespace TaskFlow.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "PM001",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "814a65b5-d125-410a-962f-9ef67186a233",
-                            Email = "pm1@taskflow.com",
-                            EmailConfirmed = true,
-                            FullName = "Alice ProjectManager",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "PM1@TASKFLOW.COM",
-                            NormalizedUserName = "PM1",
-                            PasswordHash = "AQAAAAIAAYagAAAAELJF35JBKHC/6gY5EKcOFfYexQgIb7E6L6jNj6y/ssGKrGc+DGXwORCGWqbpclA84A==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "d439c881-0bf2-4e42-9b67-6c65019515b4",
-                            TwoFactorEnabled = false,
-                            UserName = "pm1"
-                        },
-                        new
-                        {
-                            Id = "PM002",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "39ed6aea-752e-42ee-a6f3-52d37548b109",
-                            Email = "pm2@taskflow.com",
-                            EmailConfirmed = true,
-                            FullName = "Bob ProjectManager",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "PM2@TASKFLOW.COM",
-                            NormalizedUserName = "PM2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH95fHB4rHq5y8++SqQpRy/tVhsyN11Q8rOfYKtdGBO0kUruZlr2hbJLjBuG8TIycg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2602670c-c7be-4aba-8eb0-69279d0baae3",
-                            TwoFactorEnabled = false,
-                            UserName = "pm2"
-                        },
-                        new
-                        {
-                            Id = "PM003",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "6e30ee0b-3c1b-45b5-89cc-a62df61971dd",
-                            Email = "pm3@taskflow.com",
-                            EmailConfirmed = true,
-                            FullName = "Charlie ProjectManager",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "PM3@TASKFLOW.COM",
-                            NormalizedUserName = "PM3",
-                            PasswordHash = "AQAAAAIAAYagAAAAELU/eN96gbGlrTlckZA/UMNsKncu8/eQh/8HvYdzrAp2tdLWc8Ow1UcPKLbQdjdlFg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "4b1e491c-7189-4007-a4e4-c83c2de81640",
-                            TwoFactorEnabled = false,
-                            UserName = "pm3"
-                        });
                 });
 
             modelBuilder.Entity("TaskFlow.Models.Models.Comment", b =>
@@ -313,21 +263,21 @@ namespace TaskFlow.Data.Migrations
                         {
                             Id = 1,
                             Content = "Looks good so far!",
-                            CreatedAt = new DateTime(2025, 9, 26, 19, 30, 28, 910, DateTimeKind.Utc).AddTicks(2551),
+                            CreatedAt = new DateTime(2025, 9, 26, 19, 22, 35, 849, DateTimeKind.Utc).AddTicks(6269),
                             ProjectId = 1
                         },
                         new
                         {
                             Id = 2,
                             Content = "We should adjust the deadline",
-                            CreatedAt = new DateTime(2025, 9, 26, 19, 30, 28, 910, DateTimeKind.Utc).AddTicks(2555),
+                            CreatedAt = new DateTime(2025, 9, 26, 19, 22, 35, 849, DateTimeKind.Utc).AddTicks(6271),
                             TaskItemId = 1
                         },
                         new
                         {
                             Id = 3,
                             Content = "Backend authentication pending",
-                            CreatedAt = new DateTime(2025, 9, 26, 19, 30, 28, 910, DateTimeKind.Utc).AddTicks(2557),
+                            CreatedAt = new DateTime(2025, 9, 26, 19, 22, 35, 849, DateTimeKind.Utc).AddTicks(6273),
                             ProjectId = 2
                         });
                 });

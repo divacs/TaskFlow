@@ -4,7 +4,7 @@
 
 <h4>Are you sure you want to delete this task?</h4>
 <div>
-    <strong>@Model.Title</strong>
+    <strong>@Model.Title</strong> - Project: @Model.Project?.Name
 </div>
 
 <form asp-action="DeleteConfirmed" method="post">

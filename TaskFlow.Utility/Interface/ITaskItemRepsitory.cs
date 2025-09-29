@@ -11,8 +11,11 @@ namespace TaskFlow.Utility.Interface
         Task UpdateAsync(TaskItem taskItem);
         Task DeleteAsync(int id);
 
-        // maybe useful for updating status and progress separately
         Task UpdateStatusAsync(int id, string status);
         Task UpdateProgressAsync(int id, int progress);
+
+        // Assign/Unassign logic
+        Task<bool> AssignTaskAsync(int taskId, string userId, string role);
+        Task<bool> UnassignTaskAsync(int taskId);
     }
 }

@@ -8,5 +8,6 @@ namespace TaskFlow.Utility.Interface
         Task AddAsync(Project project);
         Task UpdateAsync(Project project);
         Task DeleteAsync(int id);
+        Task<IEnumerable<ApplicationUser>> GetAllProjectManagersAsync();
     }
 }

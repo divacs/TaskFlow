@@ -165,10 +165,7 @@ namespace TaskFlow.Controllers
                 await _userManager.DeleteAsync(user);
             }
 
-            // umesto RedirectToAction → prikaži posebnu stranicu
             return View("DeleteConfirmed");
         }
-
-
     }
 }
