@@ -1,7 +1,7 @@
 # TaskFlow
 
 **TaskFlow** is an ASP.NET Core 8 MVC application for managing small
-projects and tasks.\
+projects and tasks.  
 The solution follows an **N-tier architecture** with clear separation of
 concerns and uses **Entity Framework Core** and **ASP.NET Identity** for
 persistence and authentication.
@@ -18,6 +18,10 @@ practices.
     -   Implemented with **ASP.NET Identity**
     -   Roles: **Administrator**, **Project Manager**, **Developer**
     -   Custom login & registration (no scaffolding)
+    -   **Email confirmation flow implemented**:
+        -   After registration, a confirmation link is sent to the user's email
+        -   Users cannot log in until they confirm their email
+        -   Ensures system integrity and prevents fake accounts
 -   **Projects**
     -   Each project has a unique code and a name
     -   Must have an assigned **Project Manager**
@@ -52,16 +56,16 @@ practices.
 
 ## 🛠️ Tech Stack & Architecture
 
--   **ASP.NET Core 8 MVC** -- web framework\
--   **Entity Framework Core** -- ORM\
--   **ASP.NET Identity** -- authentication & role management\
--   **SQL Server** -- database\
--   **Bootstrap 5** -- UI styling\
+-   **ASP.NET Core 8 MVC** -- web framework  
+-   **Entity Framework Core** -- ORM  
+-   **ASP.NET Identity** -- authentication & role management  
+-   **SQL Server** -- database  
+-   **Bootstrap 5** -- UI styling  
 -   **N-tier architecture**
-    -   `TaskFlow` -- MVC layer (controllers, views, startup)\
-    -   `TaskFlow.Data` -- database context & migrations\
+    -   `TaskFlow` -- MVC layer (controllers, views, startup)  
+    -   `TaskFlow.Data` -- database context & migrations  
     -   `TaskFlow.Models` -- domain models (Project, TaskItem, User,
-        Comment, etc.)\
+        Comment, etc.)  
     -   `TaskFlow.Utility` -- repositories, interfaces, services,
         seeders
 
@@ -86,11 +90,11 @@ This separation ensures maintainability, testability, and scalability.
 
 ## 🔮 Planned Enhancements
 
--   Unit tests for repositories, controllers, and services\
--   Email confirmation & password reset via **MailKit**
-    -   With daily request limiting for security\
+-   Unit tests for repositories, controllers, and services  
+-   Password reset via **MailKit**
+    -   With daily request limiting for security  
 -   Richer UI/UX
-    -   Task and project progress bars\
+    -   Task and project progress bars  
     -   Notifications for deadlines and assignments
 
 ------------------------------------------------------------------------
@@ -131,11 +135,12 @@ This separation ensures maintainability, testability, and scalability.
 
 ## 📌 Notes
 
-This project was implemented with a focus on professional
-standards: - Repository pattern & Dependency Injection\
-- N-tier architecture\
-- Clean separation of concerns\
-- Identity integration without scaffolding\
+This project was implemented with a focus on professional standards:  
+- Repository pattern & Dependency Injection  
+- N-tier architecture  
+- Clean separation of concerns  
+- Identity integration without scaffolding  
+- Email confirmation before login implemented for better security and reliability 
 - Extensible design for future features (email, tests, UI improvements)
 
 ------------------------------------------------------------------------
