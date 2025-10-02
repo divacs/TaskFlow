@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using TaskFlow.Models.Models;
 using TaskFlow.Models.Models.Account;
+using TaskFlow.Utility.Interface;
 
 namespace TaskFlow.Controllers
 {
@@ -10,11 +12,13 @@ namespace TaskFlow.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _emailService = emailService;
         }
 
         //// GET: /Account/Login
@@ -30,25 +34,57 @@ namespace TaskFlow.Controllers
         public async Task<IActionResult> Login(Login model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return RedirectToAction("Error");
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
-                return View(model);
+                return RedirectToAction("Error");
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
+            // Check if email is confirmed
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                // If email is not confirmed, send email again
+                ModelState.AddModelError("", "You must confirm your email before logging in.");
+
+                // Generate confirmation token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                // Create confirmation link (use Request.Scheme for https/http)
+                var confirmationLink = Url.Action(
+                    "ConfirmEmail",
+                    "Account",
+                    new { userId = user.Id, token = token },
+                    Request.Scheme);
+
+                // Send mail with link
+                await _emailService.SendEmailAsync(
+                    user.Email,
+                    "Confirm your TaskFlow account",
+                    $"Hello {user.FullName}, please confirm your account by clicking <a href='{confirmationLink}'>here</a>."
+                );
+                return RedirectToAction("EmailVerificationSent", "Account");
+
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(
+                user.UserName,
+                model.Password,
+                isPersistent: false,
+                lockoutOnFailure: false);
+
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
-                return View(model);
+                return RedirectToAction("Error");
             }
 
-            // If login is successful, redirect to the welcome page
+            // if we reach here, login was successful
             return RedirectToAction("LoginConfirmation", "Account");
         }
+
 
         // GET: /Account/LoginWelcome
         [HttpGet]
@@ -99,21 +135,61 @@ namespace TaskFlow.Controllers
 
             try
             {
-                // if this line fails, the user creation is rolled back in the catch block
+                // Assign default role
                 await _userManager.AddToRoleAsync(user, "Developer");
 
-                // or this line fails, the user creation is rolled back in the catch block
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                // Generate confirmation token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                return RedirectToAction("LoginConfirmation", "Account");
+                // Create confirmation link (use Request.Scheme for https/http)
+                var confirmationLink = Url.Action(
+                    "ConfirmEmail",
+                    "Account",
+                    new { userId = user.Id, token = token },
+                    Request.Scheme);
+
+                // Send mail with link
+                await _emailService.SendEmailAsync(
+                    user.Email,
+                    "Confirm your TaskFlow account",
+                    $"Hello {user.FullName}, please confirm your account by clicking <a href='{confirmationLink}'>here</a>."
+                );
+
+                // return page "check your email"
+                return RedirectToAction("EmailVerificationSent", "Account");
             }
             catch
             {
-                // user creation succeeded but role assignment or sign-in failed
                 await _userManager.DeleteAsync(user);
                 ModelState.AddModelError("", "Registration failed due to an internal error.");
                 return View(model);
             }
+        }
+        // GET: /Account/EmailVerificationSent
+        [HttpGet]
+        public IActionResult EmailVerificationSent()
+        {
+            return View();
+        }
+
+        // GET: /Account/ConfirmEmail
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+                return RedirectToAction("Index", "Home");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound("User not found.");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View("ConfirmEmailSuccess");
+            }
+
+            return View("Error");
         }
     }
 }

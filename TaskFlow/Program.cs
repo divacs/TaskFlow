@@ -5,6 +5,7 @@ using TaskFlow.Models.Models;
 using TaskFlow.Utility.Interface;
 using TaskFlow.Utility.Repository;
 using TaskFlow.Utility.Seeders;
+using TaskFlow.Utility.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Identity configuration
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
