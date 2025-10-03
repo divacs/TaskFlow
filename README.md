@@ -56,6 +56,16 @@ practices.
         assigned to
     -   PMs and Admins can comment on any project or task
 
+## ⏰ Background Jobs with Hangfire
+
+-   Integrated **Hangfire** for background job scheduling and execution  
+-   Implemented **ProjectEndReminderJob**:
+    -   Automatically schedules an email reminder **5 days before the project deadline**
+    -   Reminder is sent to the assigned **Project Manager**
+    -   Job tracking fields (`ReminderJobId`, `ReminderSent`) are stored in the `Project` entity
+-   Configured **Hangfire Dashboard** (`/hangfire`) to monitor, reschedule, or cancel jobs  
+-   Ensures reliable notifications without blocking the main request pipeline
+
 ------------------------------------------------------------------------
 
 ## 🛠️ Tech Stack & Architecture
