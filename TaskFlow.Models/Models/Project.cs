@@ -35,5 +35,9 @@ namespace TaskFlow.Models.Models
         // Izračunati progress (ne čuva se u bazi)
         [NotMapped]
         public int Progress { get; set; }
+        // Reminder properties for Hangfire integration
+        public bool ReminderSent { get; set; } = false;   // if is reminder sent
+        public string? ReminderJobId { get; set; }        // ID for Hangfire job
+
     }
 }

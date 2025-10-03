@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TaskFlow.Models.Models;
 using TaskFlow.Utility.Interface;
+using TaskFlow.Utility.Job;
 
 namespace TaskFlow.Controllers
 {
@@ -82,6 +84,23 @@ namespace TaskFlow.Controllers
             }
 
             await _repo.AddAsync(project);
+            // Schedule reminder job 5 days before deadline using Hangfire
+            var reminderTime = project.Deadline.AddDays(-5);
+            if (reminderTime > DateTime.UtcNow && !string.IsNullOrEmpty(project.ProjectManager?.Email))
+            {
+                var jobId = BackgroundJob.Schedule<ProjectEndReminderJob>(
+                    job => job.SendReminderAsync(project.Id),
+                    reminderTime - DateTime.UtcNow
+                );
+
+                // Save JobId in the project for future reference
+                project.ReminderJobId = jobId;
+                project.ReminderSent = false;
+
+                // Ažuriraj projekat u bazi sa JobId
+                await _repo.UpdateReminderJobIdAsync(project.Id, jobId);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

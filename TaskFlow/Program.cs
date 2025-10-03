@@ -6,6 +6,9 @@ using TaskFlow.Utility.Interface;
 using TaskFlow.Utility.Repository;
 using TaskFlow.Utility.Seeders;
 using TaskFlow.Utility.Service;
+using TaskFlow.Utility.Job;
+using Hangfire;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,7 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IProjectEndReminderJob, ProjectEndReminderJob>();
 
 // Identity configuration
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -41,6 +45,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Account/Logout";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
+// Configure Hangfire for background job processing with SQL Server storage
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -76,5 +83,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Login}/{id?}");
-
+app.UseHangfireDashboard("/hangfire"); 
 app.Run();

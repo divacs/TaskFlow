@@ -34,13 +34,13 @@ namespace TaskFlow.Controllers
         public async Task<IActionResult> Login(Login model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Error");
+                return RedirectToAction("Error", "Account");
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
-                return RedirectToAction("Error");
+                return RedirectToAction("Error", "Account");
             }
 
             // Check if email is confirmed

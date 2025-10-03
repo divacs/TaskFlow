@@ -72,8 +72,18 @@ namespace TaskFlow.Utility.Repository
                     projectManagers.Add(user);
                 }
             }
-
             return projectManagers;
+        }
+        public async Task UpdateReminderJobIdAsync(int projectId, string jobId)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+            if (project == null) return;
+
+            project.ReminderJobId = jobId;
+            project.ReminderSent = false;
+
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
         }
     }
 }

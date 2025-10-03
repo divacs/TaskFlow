@@ -9,5 +9,6 @@ namespace TaskFlow.Utility.Interface
         Task UpdateAsync(Project project);
         Task DeleteAsync(int id);
         Task<IEnumerable<ApplicationUser>> GetAllProjectManagersAsync();
+        Task UpdateReminderJobIdAsync(int projectId, string jobId);
     }
 }
