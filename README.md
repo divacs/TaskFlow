@@ -22,6 +22,10 @@ practices.
         -   After registration, a confirmation link is sent to the user's email
         -   Users cannot log in until they confirm their email
         -   Ensures system integrity and prevents fake accounts
+    -   **Password reset flow**:
+        -   Forgot password form sends a secure reset link to the user's email
+        -   Reset link opens a form where the user sets a new password
+        -   Ensures secure recovery and prevents unauthorized access
 -   **Projects**
     -   Each project has a unique code and a name
     -   Must have an assigned **Project Manager**
@@ -141,6 +145,7 @@ This project was implemented with a focus on professional standards:
 - Clean separation of concerns  
 - Identity integration without scaffolding  
 - Email confirmation before login implemented for better security and reliability 
+- Password reset implemented manually for improved security and reliability
 - Extensible design for future features (email, tests, UI improvements)
 
 ------------------------------------------------------------------------
