@@ -26,6 +26,12 @@ practices.
         -   Forgot password form sends a secure reset link to the user's email
         -   Reset link opens a form where the user sets a new password
         -   Ensures secure recovery and prevents unauthorized access
+        -   Added rate limiting for password reset requests:
+            -   Prevents a single user from sending more than 5 reset requests in 10 minutes
+            -   Protects the app from spam, brute-force, and denial-of-service attacks
+            -   Implemented using IMemoryCache for lightweight and in-memory request tracking
+            -   Users exceeding the limit are redirected to a dedicated “Too Many Requests” page with a friendly message
+            -   Enhances both security and user experience
 -   **Projects**
     -   Each project has a unique code and a name
     -   Must have an assigned **Project Manager**
@@ -110,14 +116,15 @@ This separation ensures maintainability, testability, and scalability.
 
 ------------------------------------------------------------------------
 
-## 🔮 Planned Enhancements
+## 🔐 Security Enhancements
 
--   Unit tests for repositories, controllers, and services  
--   Password reset via **MailKit**
-    -   With daily request limiting for security  
--   Richer UI/UX
-    -   Task and project progress bars  
-    -   Notifications for deadlines and assignments
+-   Manual email confirmation flow before login
+-   Manual password reset implementation (no scaffolding)
+-   Added rate limiting for “Forgot Password” requests
+    -   Prevents abuse and protects email sending system
+    -   Redirects to a user-friendly “Too Many Requests” page
+-   All flows return generic responses to avoid information disclosure
+(e.g., system doesn’t reveal if an email exists or not)
 
 ------------------------------------------------------------------------
 

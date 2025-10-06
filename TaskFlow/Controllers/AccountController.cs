@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Win32;
 using TaskFlow.Models.Models;
 using TaskFlow.Models.Models.Account;
@@ -13,12 +14,14 @@ namespace TaskFlow.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
+        private readonly IMemoryCache _cache;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailService emailService)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IEmailService emailService, IMemoryCache cache)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _emailService = emailService;
+            _cache = cache;
         }
 
         //// GET: /Account/Login
@@ -219,29 +222,61 @@ namespace TaskFlow.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Rate limiting logic (limit to 5 requests in 10 minutes)
+            string key = $"forgot_{model.Email.ToLower()}"; // unique key per email
+
+            if (_cache.TryGetValue(key, out int requestCount))
+            {
+                if (requestCount >= 5)
+                {
+                    // If limit exceeded, show error
+                    return RedirectToAction("TooManyRequests");
+                }
+
+                // Increment request count and reset expiration
+                _cache.Set(key, requestCount + 1, TimeSpan.FromMinutes(10));
+            }
+            else
+            {
+                // First request, set count to 1
+                _cache.Set(key, 1, TimeSpan.FromMinutes(10));
+            }
+
+            // Search for user by email
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
             {
-                // security: we do not reveal whether the user exists or not
+                // For security, do not reveal if user does not exist or is not confirmed
                 return RedirectToAction("ForgotPasswordConfirmation");
             }
 
+            // Generate token for password reset
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
+            // Create reset link
             var resetLink = Url.Action(
                 "ResetPassword",
                 "Account",
                 new { token, email = user.Email },
                 Request.Scheme);
 
+            // Send email with reset link
             await _emailService.SendEmailAsync(
                 user.Email,
                 "Password Reset",
-                $"Click <a href='{resetLink}'>here</a> to reset your password."
+                $"Kliknite <a href='{resetLink}'>ovde</a> da resetujete svoju lozinku."
             );
 
+            // Redirect to confirmation page
             return RedirectToAction("ForgotPasswordConfirmation");
         }
+
+        [HttpGet]
+        public IActionResult TooManyRequests()
+        {
+            return View();
+        }
+
 
         // GET: /Account/ResetPassword open form
         [HttpGet]
