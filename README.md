@@ -66,6 +66,14 @@ practices.
 -   Configured **Hangfire Dashboard** (`/hangfire`) to monitor, reschedule, or cancel jobs  
 -   Ensures reliable notifications without blocking the main request pipeline
 
+## 🧪 Unit Testing
+
+- Implemented **unit tests** for repositories, controllers, and background jobs using **xUnit** and **Moq**
+- Used **EF Core InMemory Database** for testing repository operations without touching the production database
+- Mocked services like **UserManager** and **IEmailService** to test business logic independently
+- Covered CRUD operations, business rules, and Hangfire job scheduling logic
+- Ensures **robustness and reliability** of application logic while enabling safe refactoring
+
 ------------------------------------------------------------------------
 
 ## 🛠️ Tech Stack & Architecture
