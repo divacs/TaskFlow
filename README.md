@@ -22,11 +22,15 @@ practices.
         -   After registration, a confirmation link is sent to the user's email
         -   Users cannot log in until they confirm their email
         -   Ensures system integrity and prevents fake accounts
+        - **Added rate limiting for email confirmation resend:**
+            - Max **5 requests per 10 minutes per user**
+            - Redirects to **TooManyRequests** page if limit exceeded
+            - Prevents abuse, spam, and brute-force attacks on email system
     -   **Password reset flow**:
         -   Forgot password form sends a secure reset link to the user's email
         -   Reset link opens a form where the user sets a new password
         -   Ensures secure recovery and prevents unauthorized access
-        -   Added rate limiting for password reset requests:
+        - **Added rate limiting for password reset requests:**
             -   Prevents a single user from sending more than 5 reset requests in 10 minutes
             -   Protects the app from spam, brute-force, and denial-of-service attacks
             -   Implemented using IMemoryCache for lightweight and in-memory request tracking
@@ -118,13 +122,13 @@ This separation ensures maintainability, testability, and scalability.
 
 ## 🔐 Security Enhancements
 
--   Manual email confirmation flow before login
--   Manual password reset implementation (no scaffolding)
--   Added rate limiting for “Forgot Password” requests
-    -   Prevents abuse and protects email sending system
-    -   Redirects to a user-friendly “Too Many Requests” page
--   All flows return generic responses to avoid information disclosure
-(e.g., system doesn’t reveal if an email exists or not)
+- Manual **email confirmation flow** before login  
+- Manual **password reset implementation** (no scaffolding)  
+- **Rate limiting for password reset requests** (5 requests / 10 minutes per user)  
+- **Rate limiting for email confirmation resend** (5 requests / 10 minutes per user)  
+- Users exceeding the limit are redirected to **TooManyRequests** view  
+- All flows return generic responses to avoid information disclosure  
+  (system does not reveal if email exists or not)
 
 ------------------------------------------------------------------------
 
