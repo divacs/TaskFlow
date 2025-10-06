@@ -49,29 +49,43 @@ namespace TaskFlow.Controllers
             // Check if email is confirmed
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                // If email is not confirmed, send email again
-                ModelState.AddModelError("", "You must confirm your email before logging in.");
+                // Rate limiting for email confirmation resend
+                string key = $"confirm_{user.Email.ToLower()}";
+                if (_cache.TryGetValue(key, out int requestCount))
+                {
+                    if (requestCount >= 5)
+                    {
+                        return RedirectToAction("TooManyRequests");
+                    }
+
+                    _cache.Set(key, requestCount + 1, TimeSpan.FromMinutes(10));
+                }
+                else
+                {
+                    _cache.Set(key, 1, TimeSpan.FromMinutes(10));
+                }
 
                 // Generate confirmation token
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                // Create confirmation link (use Request.Scheme for https/http)
+                // Create confirmation link
                 var confirmationLink = Url.Action(
                     "ConfirmEmail",
                     "Account",
-                    new { userId = user.Id, token = token },
+                    new { userId = user.Id, token },
                     Request.Scheme);
 
-                // Send mail with link
+                // Send email
                 await _emailService.SendEmailAsync(
                     user.Email,
                     "Confirm your TaskFlow account",
                     $"Hello {user.FullName}, please confirm your account by clicking <a href='{confirmationLink}'>here</a>."
                 );
-                return RedirectToAction("EmailVerificationSent", "Account");
 
+                return RedirectToAction("EmailVerificationSent", "Account");
             }
 
+            // If email is confirmed, sign in
             var result = await _signInManager.PasswordSignInAsync(
                 user.UserName,
                 model.Password,
@@ -84,9 +98,9 @@ namespace TaskFlow.Controllers
                 return RedirectToAction("Error");
             }
 
-            // if we reach here, login was successful
             return RedirectToAction("LoginConfirmation", "Account");
         }
+
 
 
         // GET: /Account/LoginWelcome
@@ -141,24 +155,39 @@ namespace TaskFlow.Controllers
                 // Assign default role
                 await _userManager.AddToRoleAsync(user, "Developer");
 
+                // Rate limiting for email confirmation
+                string key = $"confirm_{user.Email.ToLower()}";
+                if (_cache.TryGetValue(key, out int requestCount))
+                {
+                    if (requestCount >= 5)
+                    {
+                        return RedirectToAction("TooManyRequests");
+                    }
+
+                    _cache.Set(key, requestCount + 1, TimeSpan.FromMinutes(10));
+                }
+                else
+                {
+                    _cache.Set(key, 1, TimeSpan.FromMinutes(10));
+                }
+
                 // Generate confirmation token
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                // Create confirmation link (use Request.Scheme for https/http)
+                // Create confirmation link
                 var confirmationLink = Url.Action(
                     "ConfirmEmail",
                     "Account",
-                    new { userId = user.Id, token = token },
+                    new { userId = user.Id, token },
                     Request.Scheme);
 
-                // Send mail with link
+                // Send email
                 await _emailService.SendEmailAsync(
                     user.Email,
                     "Confirm your TaskFlow account",
                     $"Hello {user.FullName}, please confirm your account by clicking <a href='{confirmationLink}'>here</a>."
                 );
 
-                // return page "check your email"
                 return RedirectToAction("EmailVerificationSent", "Account");
             }
             catch
@@ -167,12 +196,6 @@ namespace TaskFlow.Controllers
                 ModelState.AddModelError("", "Registration failed due to an internal error.");
                 return View(model);
             }
-        }
-        // GET: /Account/EmailVerificationSent
-        [HttpGet]
-        public IActionResult EmailVerificationSent()
-        {
-            return View();
         }
 
         // GET: /Account/ConfirmEmail
