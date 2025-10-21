@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Utility", "TaskFlo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Test", "TaskFlow.Test\TaskFlow.Test.csproj", "{C5365E67-2F1E-4132-9C63-8AD2C359D211}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.API", "TaskFlow.API\TaskFlow.API.csproj", "{6BE053FB-C417-4C29-A7C6-09401F0B66DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{C5365E67-2F1E-4132-9C63-8AD2C359D211}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5365E67-2F1E-4132-9C63-8AD2C359D211}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5365E67-2F1E-4132-9C63-8AD2C359D211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BE053FB-C417-4C29-A7C6-09401F0B66DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BE053FB-C417-4C29-A7C6-09401F0B66DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BE053FB-C417-4C29-A7C6-09401F0B66DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BE053FB-C417-4C29-A7C6-09401F0B66DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
