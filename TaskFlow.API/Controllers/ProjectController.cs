@@ -80,6 +80,10 @@ namespace TaskFlow.API.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            if (currentUser == null && !User.IsInRole("Administrator"))
+            {
+                return Unauthorized("User not logged in.");
+            }
 
             var project = new Project
             {
@@ -132,6 +136,10 @@ namespace TaskFlow.API.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (User.IsInRole("ProjectManager") && project.ProjectManagerId != currentUser.Id)
                 return Forbid();
+            if (currentUser == null && !User.IsInRole("Administrator"))
+            {
+                return Unauthorized("User not logged in.");
+            }
 
             project.Name = dto.Name;
             project.Deadline = dto.Deadline;
@@ -152,6 +160,10 @@ namespace TaskFlow.API.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (User.IsInRole("ProjectManager") && project.ProjectManagerId != currentUser.Id)
                 return Forbid();
+            if (currentUser == null && !User.IsInRole("Administrator"))
+            {
+                return Unauthorized("User not logged in.");
+            }
 
             await _repo.DeleteAsync(id);
             return NoContent();
