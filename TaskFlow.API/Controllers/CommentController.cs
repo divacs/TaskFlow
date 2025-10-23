@@ -60,7 +60,7 @@ namespace TaskFlow.API.Controllers
 
         // POST: 
         [HttpPost]
-        //[Authorize(Roles = "Administrator,ProjectManager,Developer")]
+        [Authorize(Roles = "Administrator,ProjectManager,Developer")]
         public async Task<IActionResult> Create([FromBody] CommentGetDto dto)
         {
             if (!ModelState.IsValid)
@@ -90,7 +90,7 @@ namespace TaskFlow.API.Controllers
 
         // PUT: 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Administrator,ProjectManager,Developer")]
+        [Authorize(Roles = "Administrator,ProjectManager,Developer")]
         public async Task<IActionResult> Update(int id, [FromBody] CommentGetDto dto)
         {
             if (!ModelState.IsValid)
@@ -120,7 +120,7 @@ namespace TaskFlow.API.Controllers
 
         // DELETE: 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Administrator,ProjectManager")]
+        [Authorize(Roles = "Administrator,ProjectManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var existing = await _repo.GetByIdAsync(id);

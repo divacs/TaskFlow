@@ -12,7 +12,7 @@ namespace TaskFlow.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectRepository _repo;
@@ -73,7 +73,7 @@ namespace TaskFlow.API.Controllers
         }
         // POST: 
         [HttpPost]
-        //[Authorize(Roles = "Administrator,ProjectManager")]
+        [Authorize(Roles = "Administrator,ProjectManager")]
         public async Task<IActionResult> Create([FromBody] ProjectCreateDto dto)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -124,7 +124,7 @@ namespace TaskFlow.API.Controllers
         }
         // PUT: 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Administrator,ProjectManager")]
+        [Authorize(Roles = "Administrator,ProjectManager")]
         public async Task<IActionResult> Update(int id, [FromBody] ProjectUpdateDto dto)
         {
             if (!ModelState.IsValid)
@@ -151,7 +151,7 @@ namespace TaskFlow.API.Controllers
         }
         // DELETE: 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Administrator,ProjectManager")]
+        [Authorize(Roles = "Administrator,ProjectManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var project = await _repo.GetByIdAsync(id);

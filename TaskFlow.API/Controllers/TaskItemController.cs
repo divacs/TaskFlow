@@ -11,7 +11,7 @@ namespace TaskFlow.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class TaskItemController : ControllerBase
     {
         private readonly ITaskItemRepository _repo;
@@ -75,7 +75,7 @@ namespace TaskFlow.API.Controllers
         }
         // POST: 
         [HttpPost]
-        //[Authorize(Roles = "Administrator,ProjectManager")]
+        [Authorize(Roles = "Administrator,ProjectManager")]
         public async Task<IActionResult> Create([FromBody] TaskItemCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -121,7 +121,7 @@ namespace TaskFlow.API.Controllers
         }
         // PUT: api/TaskItemApi/5
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Administrator,ProjectManager,Developer")]
+        [Authorize(Roles = "Administrator,ProjectManager,Developer")]
         public async Task<IActionResult> Update(int id, [FromBody] TaskItemUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -170,7 +170,7 @@ namespace TaskFlow.API.Controllers
 
         // DELETE: api/TaskItemApi/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Administrator,ProjectManager")]
+        [Authorize(Roles = "Administrator,ProjectManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var task = await _repo.GetByIdAsync(id);
@@ -183,8 +183,8 @@ namespace TaskFlow.API.Controllers
         private string GetCurrentUserId()
         {
             // Za test: vraća dummy ID
-            return "test-user-id";
-            //return User.Claims.First(c => c.Type == "sub" || c.Type == ClaimTypes.NameIdentifier).Value;
+            //return "test-user-id";
+            return User.Claims.First(c => c.Type == "sub" || c.Type == ClaimTypes.NameIdentifier).Value;
         }
 
     }
