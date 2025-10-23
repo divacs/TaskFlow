@@ -36,6 +36,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 // Repositories and services
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
