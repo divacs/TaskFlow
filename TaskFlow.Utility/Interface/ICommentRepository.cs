@@ -10,5 +10,6 @@ namespace TaskFlow.Utility.Interface
         Task<IEnumerable<Comment>> GetByTaskItemIdAsync(int taskItemId);
         Task AddAsync(Comment comment);
         Task DeleteAsync(int id);
+        Task UpdateAsync(Comment comment);
     }
 }

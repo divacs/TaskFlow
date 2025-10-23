@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskFlow.Models.Models;
+﻿using TaskFlow.Models.Models;
 
-namespace TaskFlow.Utility.Interface
+namespace TaskFlow.Utility.Service
 {
     public interface ITokenService
     {
